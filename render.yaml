@@ -1,0 +1,14 @@
+services:
+  - name: aetherops-backend
+    owner: tea-d80ud2jrjlhs73am2vsg
+    type: web_service
+    plan: starter
+    region: oregon
+    repo: https://github.com/ConnorLC-Flow/AetherOps.git
+    branch: master
+    rootDirectory: apps/server
+    envVars:
+      - key: JWT_SECRET
+        value: aetherops-jwt-secret-2024-production
+      - key: CORS_ORIGINS
+        value: "*"
