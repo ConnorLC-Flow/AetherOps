@@ -1,4 +1,4 @@
-from apps.server.core.database import db
+from core.database import db
 import uuid
 
 class RecommendationEngine:

@@ -3,9 +3,9 @@ import uuid
 import json
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List, Any
-from apps.server.core.database import db
-from apps.server.schemas.models import GatewayLog, GatewayProxyRequest, GatewayProxyResponse
-from apps.server.core.auth import get_current_user
+from core.database import db
+from schemas.models import GatewayLog, GatewayProxyRequest, GatewayProxyResponse
+from core.auth import get_current_user
 
 router = APIRouter(prefix="/gateway", tags=["gateway"])
 

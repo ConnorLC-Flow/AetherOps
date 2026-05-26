@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from apps.server.core.database import db
-from apps.server.schemas.models import Recommendation
-from apps.server.services.recommendation_engine import engine
+from core.database import db
+from schemas.models import Recommendation
+from services.recommendation_engine import engine
 
 router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 

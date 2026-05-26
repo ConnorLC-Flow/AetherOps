@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
 import uuid
-from apps.server.core.database import db
-from apps.server.schemas.models import Policy, PolicyCreate
+from core.database import db
+from schemas.models import Policy, PolicyCreate
 
 router = APIRouter(prefix="/policies", tags=["policies"])
 

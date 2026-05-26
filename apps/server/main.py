@@ -3,9 +3,9 @@ import logging
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from apps.server.api import inventory, costs, policies, recommendations, auth, alerts, gateway
-from apps.server.core.database import db
-from apps.server.core.auth import get_current_user
+from api import inventory, costs, policies, recommendations, auth, alerts, gateway
+from core.database import db
+from core.auth import get_current_user
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
