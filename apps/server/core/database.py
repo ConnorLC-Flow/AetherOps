@@ -11,7 +11,7 @@ class TeamDB:
     def __init__(self):
         self.url = os.getenv("TEAM_DB_URL")
         self.token = os.getenv("TEAM_DB_AUTH_TOKEN")
-        self.db_path = os.getenv("DB_PATH", "/data/aetherops.db")
+        self.db_path = os.getenv("DB_PATH", "aetherops.db")
         self.use_libsql = False
         
         if self.url and self.url.startswith("libsql://"):
