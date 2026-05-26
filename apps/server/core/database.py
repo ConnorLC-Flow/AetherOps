@@ -11,7 +11,7 @@ class TeamDB:
     def __init__(self):
         self.url = os.getenv("TEAM_DB_URL")
         self.token = os.getenv("TEAM_DB_AUTH_TOKEN")
-        self.db_path = os.getenv("DB_PATH", "aetherops.db")
+        self.db_path = os.getenv("DB_PATH", "/tmp/aetherops.db")
         self.use_libsql = False
         
         if self.url and self.url.startswith("libsql://"):
@@ -24,7 +24,9 @@ class TeamDB:
                 logger.warning("libsql-client not found, falling back to sqlite3")
 
     def _get_sqlite_connection(self):
-        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+        db_dir = os.path.dirname(self.db_path)
+        if db_dir:
+            os.makedirs(db_dir, exist_ok=True)
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
         return conn
