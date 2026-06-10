@@ -10,6 +10,7 @@ import {
   ArrowRight,
   Loader2
 } from 'lucide-react';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { useQuery } from '@tanstack/react-query';
 import { useAlerts } from '@/lib/hooks/useAlerts';
 import api from '@/lib/api';
-import Link from 'next/link';
+import { ForecastingChart } from '@/components/charts/ForecastingChart';
 
 export default function DashboardPage() {
   const { alerts, isLoading: alertsLoading, dismiss: dismissAlert } = useAlerts();
@@ -46,28 +47,28 @@ export default function DashboardPage() {
 
   const stats = [
     { 
-      name: 'Total AI Assets', 
+      name: 'Total Software Assets', 
       value: inventory?.length?.toString() || '0', 
       icon: Database, 
       change: '+2', 
       changeType: 'increase' 
     },
     { 
-      name: 'Total Spend', 
-      value: costs ? `$${costs.reduce((acc: number, curr: any) => acc + (curr.total_amount || 0), 0).toLocaleString()}` : '$0', 
+      name: 'Total Annual Spend', 
+      value: costs ? `${(costs.reduce((acc: number, curr: any) => acc + (curr.total_amount || 0), 0) * 12).toLocaleString()}` : '$0', 
       icon: BarChart3, 
       change: '+12.5%', 
       changeType: 'increase' 
     },
     { 
-      name: 'Active Policies', 
-      value: policies?.filter((p: any) => p.is_enabled).length?.toString() || '0', 
+      name: 'Renewal Notice Risk', 
+      value: 'Low', 
       icon: ShieldCheck, 
       change: '0', 
       changeType: 'neutral' 
     },
     { 
-      name: 'Recommendations', 
+      name: 'Optimization Sav...', 
       value: recommendations?.filter((r: any) => r.status === 'OPEN').length?.toString() || '0', 
       icon: Zap, 
       change: recommendations?.length?.toString() || '0', 
@@ -78,9 +79,9 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Dashboard Overview</h1>
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Software Intelligence Overview</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Welcome back. Here is what's happening with your AI fleet today.
+          Manage your organization's software intelligence and SaaS lifecycle.
         </p>
       </div>
 
@@ -113,7 +114,73 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Spend Forecasting Chart */}
+        <Card className="lg:col-span-2 shadow-sm">
+          <CardHeader>
+            <CardTitle>Spend Forecasting</CardTitle>
+            <CardDescription>Projected software spend based on current contracts and growth.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ForecastingChart />
+          </CardContent>
+        </Card>
+
+        {/* Quick Links / Actions */}
+        <div className="space-y-6">
+          <Card className="shadow-sm border-indigo-100 bg-indigo-50/20">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-bold text-indigo-900 uppercase">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Link href="/discovery" className="block w-full">
+                <Button className="w-full justify-between bg-white text-indigo-600 border-indigo-100 hover:bg-indigo-50" variant="outline">
+                  Run Domain Scan
+                  <ArrowRight size={14} />
+                </Button>
+              </Link>
+              <Link href="/contracts" className="block w-full">
+                <Button className="w-full justify-between bg-white text-indigo-600 border-indigo-100 hover:bg-indigo-50" variant="outline">
+                  Review Renewals
+                  <ArrowRight size={14} />
+                </Button>
+              </Link>
+              <Link href="/integrations" className="block w-full">
+                <Button className="w-full justify-between bg-white text-indigo-600 border-indigo-100 hover:bg-indigo-50" variant="outline">
+                  Connect SaaS API
+                  <ArrowRight size={14} />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+          
+          <Card className="shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-bold uppercase">Optimization Insights</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {!recommendations ? (
+                <div className="flex justify-center py-4">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              ) : recommendations.filter((r: any) => r.status === 'OPEN').slice(0, 2).map((rec: any) => (
+                <div key={rec.id} className="p-3 bg-slate-50 border border-slate-100 rounded-lg">
+                  <p className="text-xs text-slate-800 font-medium line-clamp-2">
+                    {rec.description}
+                  </p>
+                  <Link href="/recommendations" passHref>
+                    <Button variant="link" className="px-0 h-auto mt-2 text-indigo-600 font-bold uppercase text-[9px]">
+                      View <ArrowRight className="ml-1 h-2 w-2" />
+                    </Button>
+                  </Link>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-1">
         {/* Recent Alerts */}
         <Card className="shadow-sm">
           <CardHeader>

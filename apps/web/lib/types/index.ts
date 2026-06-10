@@ -1,13 +1,67 @@
-export type AIAssetType = 'SAAS' | 'INTERNAL_AGENT' | 'CUSTOM_MODEL';
+export type AssetType = 'AI' | 'CRM' | 'ERP' | 'HRIS' | 'COLLAB' | 'DEV' | 'MARKETING' | 'SECURITY' | 'OTHER';
+export type AssetStatus = 'DISCOVERED' | 'MANAGED' | 'DEPRECATED';
 
-export interface AIAsset {
+export interface SoftwareAsset {
   id: string;
   name: string;
-  type: AIAssetType;
+  category: AssetType;
   provider: string;
-  status: 'ACTIVE' | 'DEPRECATED' | 'PENDING_REVIEW';
-  owner_email: string;
+  is_ai_powered: boolean;
+  status: AssetStatus;
+  discovery_source?: string;
+  owner_email?: string;
+  department?: string;
+  last_activity_date?: string;
+  monthly_cost?: number;
+  contract_status?: string;
   created_at: string;
+}
+
+export interface Vendor {
+  id: string;
+  name: string;
+  website?: string;
+  logo_url?: string;
+  api_capabilities?: {
+    oauth?: boolean;
+    usage_pulls?: boolean;
+    billing_sync?: boolean;
+  };
+}
+
+export interface Contract {
+  id: string;
+  software_id: string;
+  vendor_id: string;
+  vendor_name?: string; // Joined for UI
+  software_name?: string; // Joined for UI
+  start_date: string;
+  end_date: string;
+  renewal_date: string;
+  notice_period_days: number;
+  total_contract_value: number;
+  payment_frequency: 'MONTHLY' | 'ANNUAL';
+  auto_renew: boolean;
+  billing_contact_email: string;
+  status?: 'ACTIVE' | 'EXPIRED' | 'RENEWING';
+}
+
+export interface Connector {
+  id: string;
+  vendor_id: string;
+  vendor_name?: string;
+  auth_type: 'OAUTH2' | 'API_KEY';
+  sync_status: 'ACTIVE' | 'FAILED' | 'PENDING';
+  last_sync_at: string;
+}
+
+export interface DiscoveryResult {
+  id: string;
+  name: string;
+  domain: string;
+  confidence_score: number;
+  source: string;
+  detected_at: string;
 }
 
 export interface CostRecord {

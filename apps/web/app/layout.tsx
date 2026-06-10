@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "AetherOps",
-  description: "Enterprise AI Governance & Optimization Platform",
+  description: "Software Intelligence & SaaS Lifecycle Management Platform",
 };
 
 export default function RootLayout({

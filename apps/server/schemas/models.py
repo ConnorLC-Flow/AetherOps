@@ -2,20 +2,89 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Any
 from datetime import datetime
 
-class InventoryItemBase(BaseModel):
+class SoftwareItemBase(BaseModel):
     name: str
-    type: str # SAAS|INTERNAL_AGENT|CUSTOM_MODEL
+    category: str # AI, CRM, ERP, HRIS, COLLAB, DEV
     provider: Optional[str] = None
+    is_ai_powered: bool = False
+    status: str = "MANAGED" # DISCOVERED|MANAGED|DEPRECATED
+    discovery_source: str = "MANUAL" # DNS|SSO|BILLING|MANUAL
     metadata: Optional[str] = None # JSON string
-    status: str = "ACTIVE" # ACTIVE|DEPRECATED|PENDING_REVIEW
+    department: Optional[str] = None
     owner_email: Optional[str] = None
 
-class InventoryItemCreate(InventoryItemBase):
+class SoftwareItemCreate(SoftwareItemBase):
     pass
 
-class InventoryItem(InventoryItemBase):
+class SoftwareItem(SoftwareItemBase):
     id: str
     created_at: str
+
+class VendorBase(BaseModel):
+    name: str
+    category: Optional[str] = None
+    website: Optional[str] = None
+    logo_url: Optional[str] = None
+    api_capabilities: Optional[str] = None # JSON string
+
+class VendorCreate(VendorBase):
+    pass
+
+class Vendor(VendorBase):
+    id: str
+
+class ContractBase(BaseModel):
+    software_id: str
+    vendor_id: str
+    start_date: str
+    end_date: str
+    renewal_date: str
+    notice_period_days: int = 30
+    total_contract_value: float = 0.0
+    payment_frequency: str = "ANNUAL" # MONTHLY|ANNUAL
+    auto_renew: bool = True
+    billing_contact_email: Optional[str] = None
+
+class ContractCreate(ContractBase):
+    pass
+
+class Contract(ContractBase):
+    id: str
+
+class SubscriptionBase(BaseModel):
+    inventory_id: str
+    contract_id: str
+    seat_count: int = 0
+    monthly_cost: float = 0.0
+    last_activity_date: Optional[str] = None
+    owner_email: Optional[str] = None
+
+class SubscriptionCreate(SubscriptionBase):
+    pass
+
+class Subscription(SubscriptionBase):
+    id: str
+
+class ConnectorBase(BaseModel):
+    vendor_id: str
+    auth_type: str # OAUTH2|API_KEY
+    credentials: str # JSON string (Encrypted in real world)
+    sync_status: str = "PENDING" # ACTIVE|FAILED|PENDING
+
+class ConnectorCreate(ConnectorBase):
+    pass
+
+class Connector(ConnectorBase):
+    id: str
+    last_sync_at: Optional[str] = None
+
+class DiscoveryLogBase(BaseModel):
+    domain: str
+    findings: Optional[str] = None # JSON string
+
+class DiscoveryLog(DiscoveryLogBase):
+    id: str
+    timestamp: str
 
 class CostRecordBase(BaseModel):
     inventory_id: str
@@ -74,7 +143,7 @@ class GatewayLog(BaseModel):
     reason: Optional[str] = None
 
 class GatewayProxyRequest(BaseModel):
-    tool_id: str # ID from ai_inventory
+    tool_id: str # ID from software_inventory
     payload: dict # Mock AI request payload
 
 class GatewayProxyResponse(BaseModel):
